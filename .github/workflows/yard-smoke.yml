@@ -1,0 +1,26 @@
+name: yard-smoke
+# ci-yard 自证班：公域 CI 面可用的最小证据 + 分类法闸（E912 安全：无 secrets，无 step 级 if 引用）
+on:
+  push:
+    paths: ['.github/workflows/yard-smoke.yml', '**/*.md', '**/*.py']
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: banner
+        run: echo "ci-yard 公域承接面活着 $(date -u +%FT%TZ)"
+      - name: 分类法闸（.md 必须带 CLASSIFY 头）
+        run: |
+          fail=0
+          for f in $(find . -name '*.md' -not -path './.git/*'); do
+            head -1 "$f" | grep -q 'CLASSIFY: L0\|CLASSIFY: L1' || { echo "缺 CLASSIFY 头: $f"; fail=1; }
+          done
+          exit $fail
+      - name: Python 语法闸
+        run: |
+          find . -name '*.py' -not -path './.git/*' -print0 | xargs -0 -r python3 -m py_compile
+          echo "py 语法全过"
