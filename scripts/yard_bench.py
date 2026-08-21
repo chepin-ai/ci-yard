@@ -7,7 +7,11 @@
 import os, json, time, base64, datetime, requests
 
 GH = "https://api.github.com"
-H = {"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json"}
+_T = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")   # 暖侧 ci-warm 面用仓内 GITHUB_TOKEN
+H = {"Authorization": f"Bearer {_T}", "Accept": "application/vnd.github+json"}
+BENCH_REPO = os.environ.get("BENCH_REPO") or "chepin-ai/ci-yard"    # 产出落仓（暖侧=chepin-bi/ci-warm）
+YARD_PUSH = os.environ.get("YARD_PUSH", "1") != "0"                  # 0=只写本地 bench/，由 workflow git push 回仓
+YARD_LEDGER = os.environ.get("YARD_LEDGER", "1") != "0"              # 0=不回写 ci-control 用量台账（暖侧无权面）
 keys = json.loads(os.environ.get("SHARED_KEYS") or "{}")
 now = datetime.datetime.now(datetime.timezone.utc)
 ts = now.strftime("%FT%TZ")
@@ -216,18 +220,22 @@ def pf(repo, path, raw, msg):
     rr = requests.put(f"{GH}/repos/{repo}/contents/{path}", headers=H, json=b, timeout=20)
     return rr.status_code
 
-old_jl, _ = gf("chepin-ai/ci-yard", jl_path)            # 同日多班：追加而非覆盖
-s1 = pf("chepin-ai/ci-yard", jl_path, ((old_jl or "").rstrip("\n") + "\n" + "\n".join(lines_j) + "\n").lstrip("\n"),
-        "yard bench results [skip ci]")
-s2 = pf("chepin-ai/ci-yard", "bench/latest.md", md + "\n", "yard bench latest [skip ci]")
+s1 = s2 = "skip(local)"
+if YARD_PUSH:
+    old_jl, _ = gf(BENCH_REPO, jl_path)                   # 同日多班：追加而非覆盖
+    s1 = pf(BENCH_REPO, jl_path, ((old_jl or "").rstrip("\n") + "\n" + "\n".join(lines_j) + "\n").lstrip("\n"),
+            "yard bench results [skip ci]")
+    s2 = pf(BENCH_REPO, "bench/latest.md", md + "\n", "yard bench latest [skip ci]")
 
-# ── 每班一行摘要回写 ci-control 用量台账（跨仓 App token 直推）──
-old, _ = gf("chepin-ai/ci-control", "bridge/llm-usage.jsonl")
+# ── 每班一行摘要回写 ci-control 用量台账（跨仓 App token 直推；暖侧 YARD_LEDGER=0 跳过）──
+old, _ = (gf("chepin-ai/ci-control", "bridge/llm-usage.jsonl") if YARD_LEDGER else (None, None))
 entry = json.dumps({"ts": ts, "src": "ci-yard/yard-llm-bench", "valley": VALLEY,
                     "cells": len(run_rows), "skipped": len(skip_rows),
                     "tok": tot_tok, "cost_usd": tot_cost}, ensure_ascii=False)
-newlog = ((old or "").rstrip("\n") + "\n" + entry + "\n").lstrip("\n")
-s3 = pf("chepin-ai/ci-control", "bridge/llm-usage.jsonl", newlog, "yard 班用量摘要 [skip ci]")
+s3 = "skip(ledger off)"
+if YARD_LEDGER:
+    newlog = ((old or "").rstrip("\n") + "\n" + entry + "\n").lstrip("\n")
+    s3 = pf("chepin-ai/ci-control", "bridge/llm-usage.jsonl", newlog, "yard 班用量摘要 [skip ci]")
 
 print("yard bench done:", json.dumps({"valley": VALLEY, "cells": len(run_rows),
       "skipped": len(skip_rows), "tok": tot_tok, "cost": tot_cost,
