@@ -1,0 +1,33 @@
+name: yard-llm-bench
+# ci-yard 公域免费分钟面 LLM 联测（自 ci-control 私仓迁出：私仓分钟只保哨戒）
+# 矩阵：6 场景 × 6 模型 × 温度 2 档；DeepSeek 谷段闸在脚本内判定（非 step-if）
+# 缺密 provider 由脚本检测并记「缺密跳过」行，continue-on-error 保底不红班
+# 纪律：无 step-level if 涉 secrets；python 负载零字面 ${{ }}（负载全在 scripts/yard_bench.py）
+on:
+  schedule:
+    - cron: '7 */2 * * *'    # 每 2h 一班
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: yard-llm-bench
+  cancel-in-progress: false
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/create-github-app-token@v1
+        id: app
+        with:
+          app-id: ${{ vars.CI_OPS_APP_ID }}
+          private-key: ${{ secrets.CI_OPS_APP_KEY }}
+          owner: chepin-ai
+      - name: deps
+        run: pip install -q requests
+      - name: LLM 联测矩阵（缺密自动跳过 / DeepSeek 谷段闸 / 回写用量台账）
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          SHARED_KEYS: ${{ secrets.SHARED_KEYS }}
+        run: python3 scripts/yard_bench.py
