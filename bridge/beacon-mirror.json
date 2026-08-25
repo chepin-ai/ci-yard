@@ -1,0 +1,13 @@
+{
+ "seq": 8,
+ "ts": "2026-08-25T19:58:09Z",
+ "mode": "full",
+ "ext_ok": [
+  "drand",
+  "nist",
+  "anu"
+ ],
+ "qrand": "86622b749647c6f608a5b6284eb74dfc393cecd10cfd85bc6b29660926450497",
+ "prev": "276de4521f89475b6aa42a00ba03c16cd9d2b507f390bdfbb6964cdc232600d7",
+ "hash": "f4425f05389359bfcf7fc58716759abfb9937a9529df9187a4865256b05054c8"
+}
