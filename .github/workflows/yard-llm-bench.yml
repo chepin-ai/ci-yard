@@ -18,14 +18,24 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/create-github-app-token@v1
+      - name: inline app-token (拔除外action依赖:DNS瞬断根因治理,D-090)
+        env:
+          LINE_ID: ${{ vars.CI_OPS_LINE_ID }}
+          LINE_KEY: ${{ secrets.CI_OPS_LINE_KEY }}
+        run: |
+          pip -q install pyjwt requests
+          python3 - <<'PYEOF'
+          import jwt,time,json,os,urllib.request
+          now=int(time.time())
+          t=jwt.encode({'iat':now-90,'exp':now+540,'iss':os.environ['LINE_ID']},os.environ['LINE_KEY'],algorithm='RS256')
+          H={'Authorization':'Bearer '+t,'Accept':'application/vnd.github+json'}
+          inst=json.load(urllib.request.urlopen(urllib.request.Request('https://api.github.com/app/installations',headers=H)))
+          iid=[i['id'] for i in inst if i['account']['login']=='chepin-ai'][0]
+          rq=urllib.request.Request(f'https://api.github.com/app/installations/{iid}/access_tokens',method='POST',headers=H); rq.data=b'{}'
+          tok=json.load(urllib.request.urlopen(rq))['token']
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write('token='+tok+chr(10)+')'
+          PYEOF
         id: app
-        with:
-          app-id: ${{ vars.CI_OPS_LINE_ID }}
-          private-key: ${{ secrets.CI_OPS_LINE_KEY }}
-          owner: chepin-ai
-      - name: deps
-        run: pip install -q requests
       - name: LLM 联测矩阵（缺密自动跳过 / DeepSeek 谷段闸 / 回写用量台账）
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
