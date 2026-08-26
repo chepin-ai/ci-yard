@@ -1,18 +1,18 @@
 {
- "seq": 29,
- "ts": "2026-08-26T08:39:14Z",
+ "seq": 30,
+ "ts": "2026-08-26T09:38:00Z",
  "mode": "full",
  "ext_ok": [
   "drand",
   "nist",
   "anu"
  ],
- "qrand": "c4de34d629d60816c2c0fb8289fc79acfdf756921d7a57bb1031f40d2e9897c5",
+ "qrand": "8cdcb47c402706a97344a739fddd60699057168e0f8d48c42614a7857ed1daf4",
  "holo": {
   "registry_sha256": "b81ae117330cde5d",
   "checkpoint_root": "f7368cd44a50feb3",
   "decision_head": "322b6fe0917d73c6"
  },
- "prev": "1c1483771f301fe19e2de452bcf55089e752fce3e56c9dece1b086968962f41d",
- "hash": "db274ac13aef98eefa358c1765f97a82b5690f869104bcea512fcad181123c20"
+ "prev": "db274ac13aef98eefa358c1765f97a82b5690f869104bcea512fcad181123c20",
+ "hash": "7ccc228f6811bcce9a79fe547e0bae5675f41bfc63b37f2ceec4f514b9b11d3c"
 }
