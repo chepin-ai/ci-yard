@@ -1,13 +1,13 @@
 {
- "seq": 15,
- "ts": "2026-08-25T23:23:35Z",
+ "seq": 16,
+ "ts": "2026-08-25T23:49:33Z",
  "mode": "full",
  "ext_ok": [
   "drand",
   "nist",
   "anu"
  ],
- "qrand": "535c8bded66bcebadf0ccff22afd81d43a1199a79047303933c2613113cd14ae",
- "prev": "e07a9e2741fe6f353cd88115e37d9927be98f63025190f5db1ded65c8130abd5",
- "hash": "c119eeb4f4b8e248101ab13cdb23954b2bba44028e7da4a076c7a900469713ef"
+ "qrand": "d41b94a6eb0c6c0f72feb8ac32404d73754033b62e9c3dc904eea3da64562b05",
+ "prev": "c119eeb4f4b8e248101ab13cdb23954b2bba44028e7da4a076c7a900469713ef",
+ "hash": "55044644b2ebec4dc4b9fa77ddc3cdf896ea0ac39350dd5fcd4c9a2a1efa1bb8"
 }
