@@ -1,0 +1,50 @@
+name: x-fire-receiver
+on:
+  repository_dispatch:
+    types: [x-fire]
+permissions:
+  contents: write
+jobs:
+  receive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "teleport-receive v2 标准op组 echo/file-write/beacon-read"
+        env:
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          python3 - <<'PYEOF'
+          import json,os,datetime,hashlib,base64,subprocess
+          pl=json.loads(os.environ.get('PAYLOAD','{}') or '{}')
+          ts=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+          op=pl.get('op','echo'); out=None
+          if op=='echo':
+              out={'echo':pl.get('data')}
+          elif op=='file-write':
+              p=pl.get('path',''); raw=pl.get('content_b64','')
+              if p and raw and '..' not in p and not p.startswith('/') and len(raw)<200000:
+                  os.makedirs(os.path.dirname(p) or '.',exist_ok=True)
+                  open(p,'wb').write(base64.b64decode(raw))
+                  out={'written':p,'bytes':len(raw)//4*3}
+              else: out={'error':'bad-path-or-size'}
+          elif op=='beacon-read':
+              try:
+                  out={'beacon':json.load(open('bridge/beacon-mirror.json'))['seq']}
+              except Exception as e: out={'beacon':'absent','err':str(e)[:40]}
+          else: out={'skipped':'unknown op'}
+          rec={'ts':ts,'op':op,'out':out,'challenge':hashlib.sha256((json.dumps(pl,sort_keys=True)+ts).encode()).hexdigest()[:16]}
+          os.makedirs('bridge/x-fire',exist_ok=True)
+          fn='bridge/x-fire/'+ts.replace(':','').replace('-','')+'.json'
+          open(fn,'w').write(json.dumps(rec,ensure_ascii=False,indent=1))
+          if op=='file-write' and out and 'written' in (out or {}):
+              pass
+          print(json.dumps(rec,ensure_ascii=False)[:220])
+          subprocess.run(['git','config','user.name','xfire-receiver'],check=True)
+          subprocess.run(['git','config','user.email','xfire@local'],check=True)
+          subprocess.run(['git','add','bridge/x-fire/']+( [pl.get('path','')] if (op=='file-write' and out and 'written' in (out or {})) else [] ),check=False)
+          subprocess.run(['git','commit','-m','x-fire '+op+' '+ts,'-q'],check=False)
+          for i in range(3):
+              subprocess.run(['git','pull','--rebase','-q','origin','main'],check=False)
+              r2=subprocess.run(['git','push','-q'],check=False)
+              if r2.returncode==0: break
+          PYEOF
