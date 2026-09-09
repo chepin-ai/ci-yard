@@ -1,20 +1,20 @@
 CLASSIFY: L1
-# yard LLM 联测（2026-09-09T04:59:29Z，谷段闸=窗外）
+# yard LLM 联测（2026-09-09T06:12:58Z，谷段闸=窗外）
 
 | provider | model | 场景 | 温度 | 命中 | 均秒 | tok | 成本$ |
 |---|---|---|---|---|---|---|---|
-| kimi | kimi-k3 | duty-summary | 1.0 | 2/2 | 6.0 | 405 | 0.0 |
-| kimi | kimi-k3 | attribution | 1.0 | 0/2 | 13.5 | 1118 | 0.0 |
-| kimi | kimi-k3 | lobby-draft | 1.0 | 2/2 | 13.8 | 1060 | 0.0 |
-| kimi | kimi-k3 | code-diff-review | 1.0 | 0/2 | 14.1 | 1174 | 0.0 |
-| kimi | kimi-k3 | legis-consistency | 1.0 | 1/2 | 9.2 | 799 | 0.0 |
-| kimi | kimi-k3 | long-doc-summary | 1.0 | 0/2 | 11.9 | 2010 | 0.0 |
-| kimi | kimi-k2.7-code | duty-summary | 1.0 | 2/2 | 3.8 | 232 | 0.0 |
-| kimi | kimi-k2.7-code | attribution | 1.0 | 0/2 | 12.1 | 948 | 0.0 |
-| kimi | kimi-k2.7-code | lobby-draft | 1.0 | 2/2 | 12.4 | 890 | 0.0 |
-| kimi | kimi-k2.7-code | code-diff-review | 1.0 | 0/2 | 12.4 | 1004 | 0.0 |
-| kimi | kimi-k2.7-code | legis-consistency | 1.0 | 0/2 | 11.6 | 514 | 0.0 |
-| kimi | kimi-k2.7-code | long-doc-summary | 1.0 | 0/2 | 11.8 | 1840 | 0.0 |
+| kimi | kimi-k3 | duty-summary | 1.0 | 2/2 | 8.9 | 592 | 0.0 |
+| kimi | kimi-k3 | attribution | 1.0 | 0/2 | 16.3 | 1118 | 0.0 |
+| kimi | kimi-k3 | lobby-draft | 1.0 | 2/2 | 15.9 | 1060 | 0.0 |
+| kimi | kimi-k3 | code-diff-review | 1.0 | 0/2 | 16.5 | 1174 | 0.0 |
+| kimi | kimi-k3 | legis-consistency | 1.0 | 1/2 | 8.9 | 672 | 0.0 |
+| kimi | kimi-k3 | long-doc-summary | 1.0 | 1/2 | 13.4 | 1848 | 0.0 |
+| kimi | kimi-k2.7-code | duty-summary | 1.0 | 2/2 | 5.4 | 314 | 0.0 |
+| kimi | kimi-k2.7-code | attribution | 1.0 | 1/2 | 9.1 | 948 | 0.0 |
+| kimi | kimi-k2.7-code | lobby-draft | 1.0 | 2/2 | 13.1 | 890 | 0.0 |
+| kimi | kimi-k2.7-code | code-diff-review | 1.0 | 1/2 | 10.7 | 826 | 0.0 |
+| kimi | kimi-k2.7-code | legis-consistency | 1.0 | 1/2 | 5.2 | 422 | 0.0 |
+| kimi | kimi-k2.7-code | long-doc-summary | 1.0 | 0/2 | 8.7 | 1840 | 0.0 |
 | kimi | moonshot-v1-8k | duty-summary | 0.2 | 0/2 | 0.0 | 0 | 0.0 |
 | kimi | moonshot-v1-8k | attribution | 0.2 | 0/2 | 0.0 | 0 | 0.0 |
 | kimi | moonshot-v1-8k | lobby-draft | 0.2 | 0/2 | 0.0 | 0 | 0.0 |
@@ -27,24 +27,24 @@ CLASSIFY: L1
 | kimi | moonshot-v1-8k | code-diff-review | 0.7 | 0/2 | 0.0 | 0 | 0.0 |
 | kimi | moonshot-v1-8k | legis-consistency | 0.7 | 0/2 | 0.0 | 0 | 0.0 |
 | kimi | moonshot-v1-8k | long-doc-summary | 0.7 | 0/2 | 0.0 | 0 | 0.0 |
-| deepseek | deepseek-v4-flash | duty-summary | 0.2 | 0/2 | 4.2 | 1016 | 0.00027432 |
-| deepseek | deepseek-v4-flash | attribution | 0.2 | 0/2 | 3.3 | 1100 | 0.000297 |
-| deepseek | deepseek-v4-flash | lobby-draft | 0.2 | 2/2 | 3.1 | 768 | 0.00020736 |
-| deepseek | deepseek-v4-flash | duty-summary | 0.7 | 1/2 | 3.0 | 790 | 0.0002133 |
-| deepseek | deepseek-v4-flash | attribution | 0.7 | 2/2 | 1.9 | 578 | 0.00015606 |
-| deepseek | deepseek-v4-flash | lobby-draft | 0.7 | 2/2 | 1.4 | 383 | 0.00010341 |
-| longcat | LongCat-2.0 | duty-summary | 0.2 | 2/2 | 11.6 | 839 | 0.0 |
-| longcat | LongCat-2.0 | attribution | 0.2 | 0/2 | 43.6 | 974 | 0.0 |
-| longcat | LongCat-2.0 | lobby-draft | 0.2 | 2/2 | 12.0 | 886 | 0.0 |
-| longcat | LongCat-2.0 | code-diff-review | 0.2 | 0/2 | 9.1 | 1006 | 0.0 |
-| longcat | LongCat-2.0 | legis-consistency | 0.2 | 2/2 | 3.2 | 345 | 0.0 |
-| longcat | LongCat-2.0 | long-doc-summary | 0.2 | 2/2 | 6.4 | 1535 | 0.0 |
-| longcat | LongCat-2.0 | duty-summary | 0.7 | 1/2 | 7.7 | 521 | 0.0 |
-| longcat | LongCat-2.0 | attribution | 0.7 | 0/2 | 9.9 | 974 | 0.0 |
-| longcat | LongCat-2.0 | lobby-draft | 0.7 | 2/2 | 11.9 | 886 | 0.0 |
-| longcat | LongCat-2.0 | code-diff-review | 0.7 | 0/2 | 9.5 | 1006 | 0.0 |
-| longcat | LongCat-2.0 | legis-consistency | 0.7 | 1/2 | 4.2 | 172 | 0.0 |
-| longcat | LongCat-2.0 | long-doc-summary | 0.7 | 2/2 | 5.3 | 1413 | 0.0 |
+| deepseek | deepseek-v4-flash | duty-summary | 0.2 | 1/2 | 4.5 | 989 | 0.00026703 |
+| deepseek | deepseek-v4-flash | attribution | 0.2 | 1/2 | 4.3 | 792 | 0.00021384 |
+| deepseek | deepseek-v4-flash | lobby-draft | 0.2 | 2/2 | 5.0 | 1034 | 0.00027918 |
+| deepseek | deepseek-v4-flash | duty-summary | 0.7 | 1/2 | 4.1 | 964 | 0.00026028 |
+| deepseek | deepseek-v4-flash | attribution | 0.7 | 2/2 | 1.8 | 530 | 0.0001431 |
+| deepseek | deepseek-v4-flash | lobby-draft | 0.7 | 2/2 | 1.9 | 465 | 0.00012555 |
+| longcat | LongCat-2.0 | duty-summary | 0.2 | 2/2 | 7.6 | 526 | 0.0 |
+| longcat | LongCat-2.0 | attribution | 0.2 | 1/2 | 26.4 | 816 | 0.0 |
+| longcat | LongCat-2.0 | lobby-draft | 0.2 | 2/2 | 14.8 | 886 | 0.0 |
+| longcat | LongCat-2.0 | code-diff-review | 0.2 | 0/2 | 9.8 | 1006 | 0.0 |
+| longcat | LongCat-2.0 | legis-consistency | 0.2 | 1/2 | 10.7 | 651 | 0.0 |
+| longcat | LongCat-2.0 | long-doc-summary | 0.2 | 2/2 | 4.8 | 1345 | 0.0 |
+| longcat | LongCat-2.0 | duty-summary | 0.7 | 2/2 | 14.4 | 521 | 0.0 |
+| longcat | LongCat-2.0 | attribution | 0.7 | 0/2 | 11.3 | 974 | 0.0 |
+| longcat | LongCat-2.0 | lobby-draft | 0.7 | 2/2 | 13.0 | 886 | 0.0 |
+| longcat | LongCat-2.0 | code-diff-review | 0.7 | 0/2 | 11.4 | 1006 | 0.0 |
+| longcat | LongCat-2.0 | legis-consistency | 0.7 | 1/2 | 7.9 | 651 | 0.0 |
+| longcat | LongCat-2.0 | long-doc-summary | 0.7 | 2/2 | 5.2 | 1372 | 0.0 |
 
 ## 跳过行（缺密/谷段闸）
 - deepseek/deepseek-v4-flash code-diff-review：谷段闸：窗外只跑轻题
@@ -73,7 +73,7 @@ CLASSIFY: L1
 - kimi/kimi-k3@1.0: 2/6
 - kimi/moonshot-v1-8k@0.2: 0/6
 - kimi/moonshot-v1-8k@0.7: 0/6
-- longcat/LongCat-2.0@0.2: 4/6
-- longcat/LongCat-2.0@0.7: 2/6
+- longcat/LongCat-2.0@0.2: 3/6
+- longcat/LongCat-2.0@0.7: 3/6
 
-合计 tok=27186 估算成本$=0.001251
+合计 tok=27118 估算成本$=0.001289
