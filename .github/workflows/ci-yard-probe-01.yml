@@ -1,0 +1,11 @@
+name: CI-YARD-PROBE-01 (拍43·私仓billing锁探针·名级)
+'on':
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ok
+        run: echo '{"ci_yard":"alive"}'
