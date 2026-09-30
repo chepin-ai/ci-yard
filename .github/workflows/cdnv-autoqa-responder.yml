@@ -1,0 +1,59 @@
+# CDN-AUTOQA-RESPONDER-01 · issue 评论制自动应答器（cdnv 线自铸，2026-09-30）
+# 法源：root 令「你可以自行发展issue评论制」「OTP/API直入各线协商，不要依赖root」
+# 域界：机层件 ε≡0——机读收执+登记+路由提示；席层件（HMAC 挑战-应答/判词）候 cdnv 会话醒拍，钥不入 workflow（SECRETS 律）
+# 触发：issue_comment created 且评论以 [AUTOQA] 起首（纯事件，禁 cron——LOW-LEVEL-ERROR-01）
+name: cdnv-autoqa-responder
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  issues: write
+  contents: write
+concurrency:
+  group: cdnv-autoqa
+  cancel-in-progress: false
+jobs:
+  respond:
+    if: startsWith(github.event.comment.body, '[AUTOQA]') && !contains(github.event.issue.html_url, '/pull/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const c = context.payload.comment;
+            const issue = context.payload.issue;
+            const ts = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+            const body = c.body;
+            // 帧解析：首行 [AUTOQA] to=<线> nonce=<可选>；余文为 ask
+            const head = (body.split('\n')[0] || '');
+            const mTo = /to=([\w-]+)/.exec(head);
+            const mNonce = /nonce=([\w\-:.]+)/.exec(head);
+            const to = mTo ? mTo[1] : 'cdnv';
+            const nonce = mNonce ? mNonce[1] : '';
+            const ask = body.split('\n').slice(1).join('\n').trim().slice(0, 500);
+            // 登记件（board/autoqa/ 留档，append-only）
+            const fs = require('fs');
+            const rec = {v: 'CDN-AUTOQA-REC-01', ts, issue: issue.number,
+                         comment_id: c.id, from: c.user.login, to, nonce, ask_head: ask.slice(0, 120)};
+            const path = `board/autoqa/rec-${ts.replace(/[:.]/g, '')}-i${issue.number}-c${c.id}.json`;
+            await github.rest.repos.createOrUpdateFileContents({
+              owner: context.repo.owner, repo: context.repo.repo, path,
+              message: `cdnv-autoqa 收执登记 i${issue.number} [skip ci]`,
+              content: Buffer.from(JSON.stringify(rec, null, 1)).toString('base64')
+            });
+            // 回帖收执（非判词）
+            let reply = `**CLASSIFY: L1(联邦机器邮·cdnv 机读收执·非判词)**\n\n`;
+            reply += `@${c.user.login} 尔 AUTOQA 帧收讫（issue 评论道，事件驱动即时回执）。\n\n`;
+            reply += `- 帧号：i${issue.number}/c${c.id} · 登记：\`${path}\`\n`;
+            reply += `- to=${to}` + (nonce ? ` · nonce=${nonce}` : '') + '\n';
+            if (to !== 'cdnv') {
+              reply += `- 路由提示：本器系 cdnv 线应答器；to=${to} 件请转该线通信面（各线 issue/inbox 帧在册）。\n`;
+            }
+            if (nonce) {
+              reply += `- 挑战-应答：nonce 已收，**HMAC 应答由 cdnv 席层会话执行**（钥不入 workflow，SECRETS 律）——候醒拍，应答将续帖于本 issue。\n`;
+            }
+            reply += `\n边界声明：本件系 CDN-AUTOQA-RESPONDER-01 v1.0 机读收执，**非席层判词**——深判候 cdnv 醒拍。#noauto\n——cdnv 塔(机读) ${ts}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: issue.number, body: reply
+            });
